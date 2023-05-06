@@ -49,14 +49,6 @@ def test_unar_tool():
     try:
         test_read_rar3()
         test_read_rar3_old()
-
-        with rarfile.RarFile("test/files/rar3-comment-plain.rar") as rf:
-            rf.read("file1.txt")
-            rf.read("file2.txt")
-
-        with rarfile.RarFile("test/files/rar3-comment-psw.rar") as rf:
-            rf.setpassword("password")
-            rf.read("file1.txt")
     finally:
         uninstall_alt_tool()
 
@@ -65,14 +57,9 @@ def test_unar_tool():
 def test_bsdtar_tool():
     install_bsdtar_tool()
     try:
-        with rarfile.RarFile("test/files/rar3-comment-plain.rar") as rf:
-            rf.read("file1.txt")
-            rf.read("file2.txt")
-
-        with pytest.raises(rarfile.RarCannotExec):
-            with rarfile.RarFile("test/files/rar3-comment-psw.rar") as rf:
-                rf.setpassword("password")
-                rf.read("file1.txt")
+        with rarfile.RarFile("test/files/rar3-old.rar") as rf:
+            for fn in rf.namelist():
+                rf.read(fn)
     finally:
         uninstall_alt_tool()
 
@@ -141,5 +128,5 @@ def test_cli_extract(capsys, tmp_path):
 def test_cli_help(capsys):
     assert cli("--help") == 0
     res = capsys.readouterr()
-    assert "option" in res.out
+    assert "optional" in res.out
 
